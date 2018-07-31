@@ -1,0 +1,5 @@
+export function fetchMovieTrailer(id) {
+    let api = `${info.base_url}/movie/${id}/videos${info.api_key}&language=en-US`;
+
+    return { type: 'FETCH_MOVIE_TRAILER', payload: axios.get(api) };
+}

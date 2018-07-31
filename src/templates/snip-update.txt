@@ -1,0 +1,15 @@
+componentWillReceiveProps(nextProps){
+    console.log('componentWillReceiveProps')
+    console.log('nextProps', nextProps)
+}
+shouldComponentUpdate(nextProps, nextState){
+    console.log('shouldComponentUpdate')
+    console.log('nextProps', nextProps)
+    console.log('nextState', nextState)
+    return true
+}
+componentWillUpdate(nextProps, nextState){
+    console.log('componentWillUpdate')
+    console.log('nextProps', nextProps)
+    console.log('nextState', nextState)
+}

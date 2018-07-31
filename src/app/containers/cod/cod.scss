@@ -1,0 +1,20 @@
+:local .container{
+    position: absolute;
+    bottom: 0;
+    height: 520px;
+    width: 100vw;
+    font-size: 50px;
+    color: white;
+    background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+
+    .cod__header{
+        height: 150px;
+        background-color: green;
+    }
+
+    .cod__body{
+
+    }
+}
