@@ -1,12 +1,14 @@
 import React from 'react'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import { addListener } from '@util/socket'
+import { connect } from 'react-redux'
+import { updateCod } from '../actions'
 
 import {
     Screen1, Screen2, Welcome, Composition, ProductRange, Range, Upsell, Upsize, Plv, Confirm, Layout
 } from '@screens'
 
-const router = () => (
+const router = ({dispatch}) => (
     <Router history={hashHistory}>
         <Route path='/' component={Plv} />
         <Route path='screen1' component={Screen1} />
@@ -25,6 +27,8 @@ const router = () => (
             <Route path='composition' component={Composition} />
             <Route path='range' component={Range} />
         </Route>
+        {console.warn('dispatch', dispatch(updateCod([1,2,3])))}
+
     </Router>
 )
 
@@ -70,6 +74,7 @@ function itemClean(data){
 
 function posUpdate(item, price){
     console.warn('pos update', item, price)
+    console.warn('dispatch', dispatch)
     open('layout')
 }
 
@@ -87,4 +92,11 @@ function open(screen){
     window.open(`#/${screen}`, '_self')
 }
 
-export default router
+export default connect(store => {
+    return {
+        //NOTE: example
+        // nameOfPropFromStore: store.weather.weather
+    }
+})(router)
+
+// export default router
