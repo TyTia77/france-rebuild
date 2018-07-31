@@ -28,7 +28,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test    : /\.js?x$/,
+                test    : /\.jsx?$/,
                 exclude : [/(node_modules)/, path.resolve(__dirname, 'js/vendor/')],
                 loader  : 'babel-loader',
                 options : {
@@ -57,7 +57,7 @@ module.exports = {
 
     devServer: {
         compress: false,
-        open: true,
+        open: false,
         port: devPort,
     },
 
