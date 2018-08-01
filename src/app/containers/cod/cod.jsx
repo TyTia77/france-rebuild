@@ -1,8 +1,9 @@
 import React from 'react'
 import propTypes from 'prop-types'
 import style from './cod.scss'
+import { connect } from 'react-redux'
 
-export default class cod extends React.Component {
+class cod extends React.Component {
     constructor(props) {
         super()
         this.state = {}
@@ -10,6 +11,12 @@ export default class cod extends React.Component {
 
     componentDidMount() {
         // console.log('this.props :', this.props);
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        // console.warn('should update from cod')
+        // console.warn('nextProps', nextProps.cod)
+        return true
     }
 
     render() {
@@ -21,7 +28,13 @@ export default class cod extends React.Component {
                     <div className="cod__header__price"></div>
                 </div>
                 <div className={style.cod__body}>
-                    cod body
+                    {this.props.cod.items.map(item =>
+                        <div className={style['cod__body__row']}>
+                            <span className={style['cod__body__row__items']}>{item.Qty}</span>
+                            <span className={style['cod__body__row__items']}>{item.Name}</span>
+                            <span className={style['cod__body__row__items']}>{item.Price}</span>
+                        </div>
+                    )}
                 </div>
             </div>
         )
@@ -31,3 +44,9 @@ export default class cod extends React.Component {
 cod.propTypes = {
     props: propTypes.object,
 }
+
+export default connect(store => {
+    return {
+        cod: store.cod
+    }
+})(cod)
