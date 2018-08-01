@@ -29,7 +29,7 @@ module.exports = {
         rules: [
             {
                 test    : /\.jsx?$/,
-                exclude : [/(node_modules)/, path.resolve(__dirname, 'js/vendor/')],
+                exclude : [/(node_modules)/, path.resolve(__dirname, 'src/vendor/')],
                 loader  : 'babel-loader',
                 options : {
                     presets: ['react', 'es2015', 'stage-0'],
@@ -63,7 +63,5 @@ module.exports = {
 
     plugins: debug
         ? []
-        : [
-            new webpack.optimize.UglifyJsPlugin({mangle: false, sourcemap: false}),
-        ]
+        : [new webpack.optimize.UglifyJsPlugin({mangle: false, sourcemap: false})]
 }
