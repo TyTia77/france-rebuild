@@ -2,6 +2,7 @@ import React from 'react'
 import propTypes from 'prop-types'
 import style from './cod.scss'
 import { connect } from 'react-redux'
+import { CodItem } from '@components'
 
 class cod extends React.Component {
     constructor(props) {
@@ -21,20 +22,28 @@ class cod extends React.Component {
 
     render() {
         return (
-            <div className={style.container}>
-                <div className={style.cod__header}>
-                    <div className="cod__header__bag"></div>
-                    <div className="cod__header__title">VOTRE COMMANDE</div>
-                    <div className="cod__header__price"></div>
+            <div className={style['container']}>
+                <div className={style['cod__header']}>
+                    <div className={style['cod__header__bag']}>
+                        <span className={style['cod__header__bag__count']}>4</span>
+                        <img
+                            className={style['cod__header__bag__image']}
+                            src={`${window.location.origin}/assets/cod/bag.png`} />
+                    </div>
+                    <div className={style['cod__header__title']}>VOTRE COMMANDE</div>
+                    <div className={style['cod__header__price']}>total</div>
                 </div>
-                <div className={style.cod__body}>
-                    {this.props.cod.items.map(item =>
-                        <div className={style['cod__body__row']}>
-                            <span className={style['cod__body__row__items']}>{item.Qty}</span>
-                            <span className={style['cod__body__row__items']}>{item.Name}</span>
-                            <span className={style['cod__body__row__items']}>{item.Price}</span>
-                        </div>
-                    )}
+                <div className={style['cod__body']}>
+                    <div className={style['cod__body__left']}>
+                        {
+                            this.props.cod.items.slice(9).map(item => <CodItem items={item}/>)
+                        }
+                    </div>
+                    <div className={style['cod__body__right']}>
+                        {
+                            this.props.cod.items.slice(0,9).map(item => <CodItem items={item}/>)
+                        }
+                    </div>
                 </div>
             </div>
         )

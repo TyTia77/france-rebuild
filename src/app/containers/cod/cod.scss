@@ -1,3 +1,6 @@
+@import '~@styles/variable.scss';
+
+
 :local .container{
     position: absolute;
     bottom: 0;
@@ -11,10 +14,64 @@
 
     .cod__header{
         height: 150px;
-        background-color: green;
+        background-color: $green;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+
+        &__bag{
+            width: 120px;
+
+            &__count{
+                display: block;
+                position: absolute;
+                transform: translate(40px, -5px);
+                z-index: 2;
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                text-align: center;
+                font-size: 35px;
+                line-height: 40px;
+                color: $green;
+                background-color: white;
+            }
+
+            &__image{
+                height: 80px;
+                transform: translateY(5px);
+            }
+        }
+
+        &__title{
+            flex: 1 1 0;
+        }
+
+        &__price{
+            width: 100px;
+        }
     }
 
     .cod__body{
+        display: flex;
+        height: 100%;
+        overflow: hidden;
+
+        &__left,
+        &__right{
+            flex: 1 1 0;
+            padding: 20px;
+        }
+
+        &__left{
+            // border: 1px solid green;
+        }
+
+        &__right{
+            // border: 1px solid blue;
+        }
+
+
         &__row{
             display: flex;
             font-size: 40px;

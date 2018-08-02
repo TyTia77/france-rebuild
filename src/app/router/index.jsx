@@ -64,10 +64,72 @@ class router extends React.Component {
         this.open('')
     }
 
+    rules(){
+        let list = {}
+        const ruleList = {
+            range: {
+                name: 'name',
+                journeyDefault: ['layout/range',],
+                codes: [
+                    'burger range',
+                    'drink range',
+                ]
+            },
+
+            bestOf: {
+                name: 'best of',
+                journeyDefault: ['layout/composition', 'layout/upsize'],
+                codes: ['2506'],
+            },
+
+            maxiBestOf: {
+                name: 'maxi best of',
+                journeyDefault: ['layout/composition'],
+                codes: ['2581'],
+            },
+
+            golden: {
+                name: 'golden',
+                journeyDefault: ['layout/composition'],
+                codes: ['3410'],
+            },
+        }
+
+        for (let prop in ruleList){
+            list[prop] = Object.assign({}, ruleList[prop])
+        }
+
+        return list
+    }
+
+    findJourney(rules, code){
+        for (let prop in rules){
+            if (rules[prop].codes.indexOf(code) > -1){
+                return rules[prop]
+            }
+        }
+
+        return false
+    }
+
     posUpdate(item, price){
         console.warn('pos update', item, price)
         // console.warn('dispatch', this.props.dispatch)
+
+        let rules = this.rules()
+        let selected = item[item.length -1]
+
+        let journey = this.findJourney(rules, selected.Cod)
+
+        console.warn('rules', journey)
+
         this.props.dispatch(updateCod(item))
+
+        if (journey){
+            this.open(journey.journeyDefault[0])
+            return
+        }
+
         this.open('layout')
     }
 
@@ -94,6 +156,7 @@ class router extends React.Component {
                 break
 
             case '3':
+            case '5':
                 this.posFinish()
                 break
         }
@@ -106,7 +169,6 @@ class router extends React.Component {
     itemClean(data){
         return data.map(item => {
             console.warn('item', item)
-
 
             const abc = {
                 attributes: {},
@@ -125,7 +187,7 @@ class router extends React.Component {
 
             console.warn('abc', abc)
 
-
+            item.$.Name = item.$.Name.split('/').reverse()[0]
             return item.$
         })
     }
@@ -148,11 +210,12 @@ class router extends React.Component {
                     <IndexRoute component={ProductRange}></IndexRoute>
                     <Route path='composition' component={Composition} />
                     <Route path='range' component={Range} />
+                    <Route path='upsize' component={Upsize} />
+                    <Route path='upsell' component={Upsell} />
                 </Route>
             </Router>
         )
     }
-
 }
 
 router.propTypes = {
