@@ -4,6 +4,9 @@ import style from './cod.scss'
 import { connect } from 'react-redux'
 import { CodItem } from '@components'
 
+import abc from 'new-soda'
+
+
 class cod extends React.Component {
     constructor(props) {
         super()
@@ -12,6 +15,10 @@ class cod extends React.Component {
 
     componentDidMount() {
         // console.log('this.props :', this.props);
+        // abc.masterIp.set('192.168.99.200')
+        console.error('abc', abc)
+        console.error('run', abc.masterIp.run())
+        console.error('newsoda', abc.masterIp.get())
     }
 
     shouldComponentUpdate(nextProps, nextState){
