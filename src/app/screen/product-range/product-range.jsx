@@ -1,5 +1,6 @@
 import React from 'react'
 import propTypes from 'prop-types'
+import style from './product-range.scss'
 
 export default class productRange extends React.Component {
     constructor(props) {
@@ -14,7 +15,34 @@ export default class productRange extends React.Component {
     render() {
         return (
             <div className='screen1__container'>
-                product rage screen
+                <div className={style.header}>
+                    AUJOURD'HUI <br/> NOUS VOUS PROPOSONS
+                </div>
+
+                <div className={style.hero}>
+                    <img src="../../../assets/product-range/50bigmac.jpg" />
+                </div>
+
+                <div className={style.row}>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                </div>
+
+                <div className={style.row}>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                    <div className={style.row__boxes}></div>
+                </div>
+
+                <div className={style.disclaimer}>
+                    disclaimer
+                </div>
+
             </div>
         )
     }

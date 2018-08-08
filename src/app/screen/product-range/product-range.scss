@@ -1,0 +1,32 @@
+@import '~@styles/mixin.scss';
+
+:local .header{
+    @include screenHeader;
+}
+
+:local .hero{
+    height: 660px;
+    width: 100%;
+
+    background-color: lightgrey;
+    overflow: hidden;
+}
+
+:local .row{
+    height: 200px;
+    // background-color: red;
+    margin: 20px 0 20px 0;
+    position: relative;
+    z-index: 90;
+    display: flex;
+
+    &__boxes{
+        border: 1px solid black;
+        flex: 1 1 0;
+    }
+}
+
+:local .disclaimer{
+    font-size: 25px;
+    text-align: center;
+}

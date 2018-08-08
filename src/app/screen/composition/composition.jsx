@@ -2,6 +2,8 @@ import React from 'react'
 import propTypes from 'prop-types'
 import style from './composition.scss'
 
+import { CompositionRow } from '@containers'
+
 export default class composition extends React.Component {
     constructor(props) {
         super()
@@ -15,7 +17,13 @@ export default class composition extends React.Component {
     render() {
         return (
             <div className={style['container']}>
-                menu composition screen
+                <div className={style.header}>
+                    COMPOSEZ VOITRE MENU <br/> BEST OF
+                </div>
+
+                <CompositionRow />
+                <CompositionRow />
+                <CompositionRow />
             </div>
         )
     }

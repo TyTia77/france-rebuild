@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import { addListener } from '@util/socket'
 import { connect } from 'react-redux'
 import { updateCod } from '../actions'
+import newSoda from 'new-soda'
 
 import {
     Screen1, Screen2, Welcome, Composition, ProductRange, Range, Upsell, Upsize, Plv, Confirm, Layout
@@ -50,10 +51,21 @@ class router extends React.Component {
 
     addEvents(){
         // console.warn('adding events')
-        addListener('switchboard.vehicle-detected', this.welcome.bind(this))
-        addListener('switchboard.wwc.reset', this.gamme.bind(this))
-        addListener('switchboard.update', this.posUpdate.bind(this))
+
+
+        console.error('newSoda', newSoda)
+        newSoda.lms.setup('192.168.99.200')
+        newSoda.lms.listener.add('switchboard.vehicle-detected', this.welcome.bind(this))
+        newSoda.lms.cod.onComplete(this.posFinish.bind(this))
+        newSoda.lms.cod.onUpdate(this.posUpdate.bind(this))
+        newSoda.lms.cod.onConfirm(this.posConfirm.bind(this))
+
         addListener('notification', this.notifi.bind(this))
+
+        // addListener('switchboard.vehicle-detected', this.welcome.bind(this))
+        // addListener('switchboard.wwc.reset', this.gamme.bind(this))
+        // addListener('switchboard.update', this.posUpdate.bind(this))
+        // addListener('notification', this.notifi.bind(this))
     }
 
     welcome(){
@@ -113,7 +125,7 @@ class router extends React.Component {
     }
 
     posUpdate(item, price){
-        console.warn('pos update', item, price)
+        console.error('pos update', item)
         // console.warn('dispatch', this.props.dispatch)
 
         let rules = this.rules()
@@ -137,13 +149,14 @@ class router extends React.Component {
         this.open('confirm')
     }
 
+
     notifi(data){
         let payload = data.data.attributes.payload.data.eCOCsaleInfo
         let orderstate = payload.Header[0].$.OrderState
         let order = payload.Order[0].Item
         let totalPrice = payload.Order[0].$
         console.warn('header', payload.Header[0].$)
-        console.warn('order', payload.Order[0])
+        console.warn('order notifi', payload.Order[0])
         console.warn('notifi', orderstate)
 
         switch(orderstate){
@@ -161,36 +174,37 @@ class router extends React.Component {
                 break
         }
     }
-
     open(screen){
         window.open(`#/${screen}`, '_self')
     }
 
     itemClean(data){
         return data.map(item => {
-            console.warn('item', item)
-
-            const abc = {
-                attributes: {},
-                code: item.$.Cod,
-                displayName: item.$.Name.split('/').reverse()[0],
-                name: item.$.Name,
-                extras: [],
-                price: item.$.Price,
-                qtyPromo: 0,
-                quantity: item.$.Qty,
-                selected: false,
-                showQuantity: true,
-                subProducts: [],
-                voided: item.$.QtyVoided == '0' ? false : true,
-            }
-
-            console.warn('abc', abc)
+            console.warn('item xxx', item)
 
             item.$.Name = item.$.Name.split('/').reverse()[0]
+            if (item.hasOwnProperty('Grill')){
+
+                let subProducts = item.Grill.filter(grill => !grill.$.hasOwnProperty('ModifiedQty')).map(grill => grill.$)
+                let extras = item.Grill.filter(grill => grill.$.hasOwnProperty('ModifiedQty')).map(grill => grill.$)
+
+                if (subProducts.length){
+                    item.$.subProducts = subProducts
+                }
+
+                if (extras.length){
+                    item.$.extras = extras
+                }
+
+            }
+
+            console.warn('item after', item)
+
+
             return item.$
         })
     }
+
 
     posFinish(data){
         console.warn('pos finish')

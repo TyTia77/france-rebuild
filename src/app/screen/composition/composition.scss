@@ -1,3 +1,9 @@
+@import '~@styles/mixin.scss';
+
 :local .container{
     font-size: 50px;
+}
+
+:local .header{
+    @include screenHeader;
 }

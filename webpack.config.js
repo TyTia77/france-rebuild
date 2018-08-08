@@ -10,7 +10,7 @@ module.exports = {
     entry: path.resolve(__dirname, 'src/app/index.jsx'),
 
     output: {
-        path: '/build',
+        path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
 
         /*
@@ -63,5 +63,7 @@ module.exports = {
 
     plugins: debug
         ? []
-        : [new webpack.optimize.UglifyJsPlugin({mangle: false, sourcemap: false})]
+        : [
+            new webpack.optimize.UglifyJsPlugin(JsUglify)
+        ]
 }

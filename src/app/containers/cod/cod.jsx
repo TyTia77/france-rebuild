@@ -4,7 +4,7 @@ import style from './cod.scss'
 import { connect } from 'react-redux'
 import { CodItem } from '@components'
 
-import abc from 'new-soda'
+import newSoda from 'new-soda'
 
 
 class cod extends React.Component {
@@ -15,10 +15,28 @@ class cod extends React.Component {
 
     componentDidMount() {
         // console.log('this.props :', this.props);
-        // abc.masterIp.set('192.168.99.200')
-        console.error('abc', abc)
-        console.error('run', abc.masterIp.run())
-        console.error('newsoda', abc.masterIp.get())
+        // console.error('newSoda', newSoda)
+        // newSoda.lms.setup('192.168.99.200')
+        // newSoda.lms.listener.add('switchboard.vehicle-detected', this.cb)
+        // newSoda.lms.cod.onComplete(this.tycomplete)
+        // newSoda.lms.cod.onUpdate(this.tyupdate)
+        // newSoda.lms.cod.onConfirm(this.tyconfirm)
+    }
+
+    cb(){
+        console.error('cb called')
+    }
+
+    tycomplete(){
+        console.error('ty complete')
+    }
+
+    tyupdate(data, total){
+        console.error('ty update', data)
+    }
+
+    tyconfirm(data, total){
+        console.error('ty confirm', data)
     }
 
     shouldComponentUpdate(nextProps, nextState){
