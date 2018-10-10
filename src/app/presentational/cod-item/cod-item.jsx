@@ -9,9 +9,9 @@ import style from './cod-item.scss'
 
 const codItem = ({ items }) =>
     <div className={style['container']}>
-        <div className={style['container__items']}>{items.Qty}</div>
-        <div className={style['container__items']}>{items.Name}</div>
-        <div className={style['container__items']}>{items.Price}</div>
+        <div className={style['container__items']}>{items.quantity}</div>
+        <div className={style['container__items']}>{items.name}</div>
+        <div className={style['container__items']}>{items.price}</div>
     </div>
 
 codItem.propTypes = {

@@ -32,10 +32,31 @@ window.setup = () => {
 
     SB.setup({
         url: 'https://digitalproduction.coates.io/',
+        // url: 'https://demo.fr.mcd.switchboardcms.com/',
+
         environmentLocation: 'SYDLAB',
-        channelScreenId: 1,
+        // environmentLocation: 'FRLAB',
+
+        // channelScreenId: 1,
         content: 'SW_CORE.zip',
+
         // sources: [...getCsvList(contentName)],
+
+        // TODO: france datasource
+        sources: [
+            'COD.GAMME.top-banner.csv',
+			'COD.gamme.item-rows.csv',
+			'COD.PLV.matin.csv',
+			'COD.PLV.repas.csv',
+			'COD.PLV.aprem.csv',
+			'mcd-pos6.xml.csv',
+			'Store.Display.Names',
+			'product-map.csv',
+			'product-taste.csv',
+			'pos-items-categorised_complete.csv',
+			'suggestive-sweet-salty-items.csv',
+        ].map(source => source.indexOf('.csv') > -1 ? source : `${source}.csv`),
+
         success: () => init()
     })
 }

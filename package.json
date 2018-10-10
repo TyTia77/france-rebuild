@@ -15,8 +15,9 @@
     },
     "dependencies": {
         "jquery": "^3.3.1",
+        "lms-connect": "git+ssh://git@git.coates.io:digital-production/dp-toolkit/lms-connect#feature/PSDP-870/unit-test",
         "lodash": "^4.17.5",
-        "new-soda": "git+https://gitlab.com/coates-digital-productions/new-soda.git",
+        "new-soda": "git+https://gitlab.com/coates-digital-productions/new-soda.git#development",
         "prop-types": "^15.6.0",
         "react": "^16.2.0",
         "react-dom": "^16.2.0",
@@ -24,6 +25,7 @@
         "react-router": "^3.0.5",
         "redux": "^3.7.2",
         "socket-io": "^1.0.0",
+        "switchboard-connect": "git+https://gitlab.com/coates-digital-productions/switchboard-connect.git#development",
         "webpack": "^3.11.0"
     },
     "devDependencies": {

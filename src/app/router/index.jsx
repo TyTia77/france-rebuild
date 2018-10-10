@@ -3,8 +3,9 @@ import propTypes from 'prop-types'
 import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import { addListener } from '@util/socket'
 import { connect } from 'react-redux'
-import { updateCod } from '../actions'
-import newSoda from 'new-soda'
+import { updateCod, datasource } from '../actions'
+// import newSoda from 'new-soda'
+import SBConnect from 'lms-connect'
 
 import {
     Screen1, Screen2, Welcome, Composition, ProductRange, Range, Upsell, Upsize, Plv, Confirm, Layout
@@ -24,6 +25,8 @@ class router extends React.Component {
     // constructor(props)
     componentWillMount(){
         this.props.dispatch(updateCod([1]))
+        this.props.dispatch(datasource())
+
         this.addEvents()
         // this.props.dispatch(actionName())
         // this.props.dispatch(actionName())
@@ -40,27 +43,36 @@ class router extends React.Component {
     // TODO: updating
     // componentWillReceiveProps(nextProps)
     shouldComponentUpdate(nextProps, nextState){
-        console.warn('should update')
-        console.warn('nextProps', nextProps)
+        // console.warn('should update')
+        // console.warn('nextProps', nextProps)
     }
 
     componentWillUpdate(nextProps, nextState){
-        console.warn('willupdate')
-        console.warn('nextProps', nextProps)
+        // console.warn('willupdate')
+        // console.warn('nextProps', nextProps)
     }
 
     addEvents(){
         // console.warn('adding events')
 
+        console.error('SBConnect', SBConnect)
+        SBConnect.setup('192.168.99.200')
+        // SBConnect.setup('localhost')
+        // SBConnect.setup('10.0.3.100')
+        SBConnect.listener.add('switchboard.vehicle-detected', this.welcome.bind(this))
+        SBConnect.cod.onComplete(this.posFinish.bind(this))
+        SBConnect.cod.onUpdate(this.posUpdate.bind(this))
+        SBConnect.cod.onConfirm(this.posConfirm.bind(this))
 
-        console.error('newSoda', newSoda)
-        newSoda.lms.setup('192.168.99.200')
-        newSoda.lms.listener.add('switchboard.vehicle-detected', this.welcome.bind(this))
-        newSoda.lms.cod.onComplete(this.posFinish.bind(this))
-        newSoda.lms.cod.onUpdate(this.posUpdate.bind(this))
-        newSoda.lms.cod.onConfirm(this.posConfirm.bind(this))
+        // newSoda.lms.cod.onPosOpen()
 
         addListener('notification', this.notifi.bind(this))
+        // addListener('testing', function(data){
+        //     console.warn('testing called', data)
+        // })
+        // setTimeout(() => {
+        //     newSoda.lms.send('testing', 'abcbac')
+        // }, 2000)
 
         // addListener('switchboard.vehicle-detected', this.welcome.bind(this))
         // addListener('switchboard.wwc.reset', this.gamme.bind(this))
@@ -68,7 +80,8 @@ class router extends React.Component {
         // addListener('notification', this.notifi.bind(this))
     }
 
-    welcome(){
+    welcome(data){
+        console.info('data detect vehicle', data)
         this.open('welcome')
     }
 
@@ -124,18 +137,16 @@ class router extends React.Component {
         return false
     }
 
-    posUpdate(item, price){
-        console.error('pos update', item)
-        // console.warn('dispatch', this.props.dispatch)
-
+    posUpdate(data){
+        console.error('update', data)
         let rules = this.rules()
-        let selected = item[item.length -1]
+        let selected = data.items[data.items.length - 1]
 
-        let journey = this.findJourney(rules, selected.Cod)
+        let journey = this.findJourney(rules, selected.code)
 
         console.warn('rules', journey)
 
-        this.props.dispatch(updateCod(item))
+        this.props.dispatch(updateCod(data.items))
 
         if (journey){
             this.open(journey.journeyDefault[0])
@@ -146,6 +157,7 @@ class router extends React.Component {
     }
 
     posConfirm(item, price){
+        console.error('confirm', item)
         this.open('confirm')
     }
 
@@ -155,59 +167,65 @@ class router extends React.Component {
         let orderstate = payload.Header[0].$.OrderState
         let order = payload.Order[0].Item
         let totalPrice = payload.Order[0].$
-        console.warn('header', payload.Header[0].$)
-        console.warn('order notifi', payload.Order[0])
-        console.warn('notifi', orderstate)
 
-        switch(orderstate){
-            case '1':
-                this.posUpdate(this.itemClean(order), totalPrice)
-                break
+        // console.error('sb from france', SB)
+        // console.warn('header', payload.Header[0].$)
+        // console.warn('order notifi', payload.Order[0])
+        // console.warn('notifi', orderstate)
+        // console.warn('tester', arguments)
+        console.warn('tester1', data)
 
-            case '2':
-                this.posConfirm(order, totalPrice)
-                break
+        // switch(orderstate){
+        //     case '1':
+        //         this.posUpdate(this.itemClean(order), totalPrice)
+        //         break
 
-            case '3':
-            case '5':
-                this.posFinish()
-                break
-        }
+        //     case '2':
+        //         this.posConfirm(order, totalPrice)
+        //         break
+
+        //     case '3':
+        //     case '5':
+        //         this.posFinish()
+        //         break
+        // }
     }
     open(screen){
         window.open(`#/${screen}`, '_self')
     }
 
     itemClean(data){
-        return data.map(item => {
-            console.warn('item xxx', item)
+        return this.findSelected(data.map(item => {
+            item.$.Code = item.$.Cod
+            item.$.Qty = String(Math.abs(item.$.QtyVoided - item.$.Qty))
+            item.$.subProducts = []
+            item.$.extras = []
 
-            item.$.Name = item.$.Name.split('/').reverse()[0]
+            delete item.$.Cod
+            delete item.$.QtyVoided
+
             if (item.hasOwnProperty('Grill')){
+                item.$.subProducts = item.Grill.filter(grill => !grill.$.hasOwnProperty('ModifiedQty')).map(grill => grill.$)
+                item.$.extras = item.Grill.filter(grill => grill.$.hasOwnProperty('ModifiedQty')).map(grill => grill.$)
 
-                let subProducts = item.Grill.filter(grill => !grill.$.hasOwnProperty('ModifiedQty')).map(grill => grill.$)
-                let extras = item.Grill.filter(grill => grill.$.hasOwnProperty('ModifiedQty')).map(grill => grill.$)
-
-                if (subProducts.length){
-                    item.$.subProducts = subProducts
-                }
-
-                if (extras.length){
-                    item.$.extras = extras
-                }
-
+                item.$.subProducts = item.$.subProducts.length
+                    ? sortSubProducts(item.$.subProducts)
+                    : item.$.subProducts
             }
 
-            console.warn('item after', item)
-
-
             return item.$
-        })
+        }))
     }
 
+    findSelected(products){
+        console.warn('products', products)
+
+
+        return products
+    }
 
     posFinish(data){
-        console.warn('pos finish')
+        console.error('pos finish', data)
         this.open('')
     }
 
@@ -236,4 +254,10 @@ router.propTypes = {
     props: propTypes.types,
 }
 
-export default connect()(router)
+export default connect(store => {
+    console.info('store', store)
+    console.info('process', window.location)
+    return {
+
+    }
+})(router)

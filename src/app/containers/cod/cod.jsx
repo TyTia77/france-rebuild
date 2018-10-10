@@ -4,7 +4,8 @@ import style from './cod.scss'
 import { connect } from 'react-redux'
 import { CodItem } from '@components'
 
-import newSoda from 'new-soda'
+// import newSoda from 'new-soda'
+import newSoda from 'lms-connect'
 
 
 class cod extends React.Component {
@@ -14,13 +15,13 @@ class cod extends React.Component {
     }
 
     componentDidMount() {
-        // console.log('this.props :', this.props);
-        // console.error('newSoda', newSoda)
-        // newSoda.lms.setup('192.168.99.200')
-        // newSoda.lms.listener.add('switchboard.vehicle-detected', this.cb)
-        // newSoda.lms.cod.onComplete(this.tycomplete)
-        // newSoda.lms.cod.onUpdate(this.tyupdate)
-        // newSoda.lms.cod.onConfirm(this.tyconfirm)
+        console.info('this.props :', this.props)
+        // console.info('newSoda', newSoda)
+        // newSoda.setup('192.168.99.200')
+        // newSoda.listener.add('switchboard.vehicle-detected', this.cb)
+        // newSoda.cod.onComplete(this.tycomplete)
+        // newSoda.cod.onUpdate(this.tyupdate)
+        // newSoda.cod.onConfirm(this.tyconfirm)
     }
 
     cb(){
@@ -40,8 +41,8 @@ class cod extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState){
-        // console.warn('should update from cod')
-        // console.warn('nextProps', nextProps.cod)
+        console.info('should update from cod')
+        console.info('nextProps', nextProps.cod)
         return true
     }
 
